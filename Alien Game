@@ -1,0 +1,70 @@
+def user_instructions():
+    print('--------------')
+    print('You are alone at your house when a giant poison alien crashed into your backyard and enters your house!')
+    print('You must collect all 6 items before you can defeat the alien.')
+    print('Encounter the alien before you collect all times the game is over!')
+    print('Your life is in your hands.')
+    print('\nMove through the rooms using the commands: "west", "south", "north", or "east"')
+    print('Each room contains an item to pick up.')
+    print('If you want to pick up the item and then type "take" then type the item you want to take.')
+    print('\nGood Luck!')
+
+
+#  define command available for each room
+rooms = {
+    'Living Room': {'east': 'Bedroom', 'south': 'Basement',
+                    'west': 'Backyard', 'north': 'Kitchen', 'item': 'no items'},
+    'Backyard': {'east': 'Living Room', 'item': 'sling shot'},
+    'Kitchen': {'east': 'Bathroom', 'south': 'Living Room', 'item': 'sward'},
+    'Bathroom': {'west': 'Kitchen', 'item': 'body armor'},
+    'Bedroom': {'west': 'Living Room', 'north': 'Game Room', 'item': 'protective glasses'},
+    'Game Room': {'south': 'Bedroom', 'item': 'shield'},
+    'Basement': {'north': 'Living Room', 'east': 'Art Room', 'item': 'growing potion'},
+    'Art Room': {'west': 'Basement', 'item': 'giant poison alien'}
+}
+
+
+#  indicate room and inventory contents
+def user_status():
+    print('\n-------------------------')
+    print('You are currently in the {}'.format(current_room))
+    print('In this room you find a {}'.format(rooms[current_room]['item']))
+    print('Items you have in your inventory:', inventory_items)
+    print('-------------------------------')
+
+
+def invalid_move():
+    print('Move not accepted, please try again')
+
+
+def retrieve_item(location, room, inventory):
+    inventory.append(room[location]['Item'])
+    del room[location]['Item']
+
+
+user_instructions()
+#  list begins empty
+inventory_items = []
+#  start in Living Room
+current_room = 'Living Room'
+command = ''
+
+#  Art Room area is the end of the game, no commands can be entered
+while current_room != 'Art Room':
+    user_status()
+    command = input('Enter your next direction or use take to get an item\n').lower()
+    if command == 'take':
+        item = input('What do you want to take? ').lower()
+        if item in rooms[current_room]['item']:
+            inventory_items.append(item)
+        else:
+            print(f"There's no {item} here.")
+    elif command in rooms[current_room]:
+        current_room = rooms[current_room][command]
+    else:
+        print('Invalid command')
+
+if len(inventory_items) != 6:
+    print('You Lose')
+else:
+    print('Congratulation on defeating the Alien!')
